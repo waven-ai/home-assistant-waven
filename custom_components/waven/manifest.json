@@ -1,0 +1,13 @@
+{
+  "domain": "waven",
+  "name": "Waven",
+  "codeowners": ["@waven-ai"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/waven-ai/home-assistant-waven",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/waven-ai/home-assistant-waven/issues",
+  "requirements": [],
+  "version": "0.1.1"
+}

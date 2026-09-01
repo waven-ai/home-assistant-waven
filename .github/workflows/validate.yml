@@ -1,0 +1,41 @@
+name: Validate
+
+# Runs on the PUBLIC GitHub mirror (waven-ai/home-assistant-waven), whose repo
+# root is this `homeassistant/` directory. Inert in the waven.ai monorepo —
+# GitHub Actions only reads workflows from the REPO ROOT `.github/workflows/`,
+# and here this lives under a subdir. The monorepo's own HA gates are the
+# `ha-integration-test` / `ha-runtime-test` jobs in the root ci.yml.
+#
+# hassfest + the HACS action are the gates HACS/Home-Assistant run before an
+# integration is installable; keeping them green is the bar for the v1 launch.
+
+on:
+  push:
+  pull_request:
+  schedule:
+    # Weekly: catches HACS / Home Assistant manifest-spec drift even with no
+    # commits (a stale integration starts failing validation silently).
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  hassfest:
+    name: hassfest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    name: HACS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hacs/action@main
+        with:
+          category: integration
+          # The brand icon lives in the home-assistant/brands repo and is
+          # submitted there separately (see "Brand icon" in the README —
+          # not done yet). It is cosmetic for HACS custom-repo installs, so
+          # don't block validation on it until that PR lands.
+          ignore: brands

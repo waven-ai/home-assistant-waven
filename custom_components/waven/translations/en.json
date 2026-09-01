@@ -1,0 +1,72 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Waven",
+        "description": "Paste a Waven API key from your dashboard (Settings → API keys). Wake word, voice activity detection and intent matching stay on this Home Assistant host — only the spoken utterance and the response text are sent to Waven.",
+        "data": {
+          "api_key": "API key",
+          "region": "Region"
+        },
+        "data_description": {
+          "api_key": "Begins with wvn_. Stored encrypted in Home Assistant; never written to configuration.yaml.",
+          "region": "Where your speech is processed."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate Waven",
+        "description": "Your Waven API key is no longer valid. Paste a new one.",
+        "data": {
+          "api_key": "API key"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "That API key was rejected. Check it begins with wvn_ and is active.",
+      "cannot_connect": "Could not reach Waven. Check this host's internet connection.",
+      "consent_required": "This Waven account hasn't accepted the current Terms of Service and Privacy Policy. Accept them in the Waven dashboard, then try again.",
+      "quota_exceeded": "This Waven account has reached its usage limit. Check your plan in the Waven dashboard, then try again.",
+      "unknown": "Unexpected error validating the key."
+    },
+    "abort": {
+      "already_configured": "This Waven account is already set up.",
+      "reauth_successful": "Waven re-authenticated successfully.",
+      "wrong_account": "That API key belongs to a different Waven account. Re-authentication must use a key for the account this entry was set up with; to switch accounts, remove this entry and add a new one."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Waven voice settings",
+        "description": "Assign a voice per response type (the hybrid policy). Quick acknowledgements stay snappy with a stock voice; long announcements can use your cloned voice. The daily cap is a hard safety rail — if a stuck microphone burns through it, voice pauses but your automations keep running.",
+        "data": {
+          "voice_ack": "Voice — quick acknowledgements",
+          "voice_confirmation": "Voice — confirmations",
+          "voice_announcement": "Voice — long announcements",
+          "voice_error": "Voice — errors",
+          "stt_mode": "Speech-to-text model",
+          "stt_language": "Speech-to-text language",
+          "tts_format": "Audio format",
+          "daily_cap_minutes": "Daily voice cap (minutes)",
+          "retain_audio": "Allow Waven's short-term audio cache",
+          "audit_enabled": "Record a local request audit log"
+        },
+        "data_description": {
+          "stt_mode": "auto picks per language. accurate = Parakeet (English, best quality). multilingual = Voxtral (en/fr/de/es/it/pt). fast is a legacy option — Moonshine was retired, so it now resolves to Parakeet (identical to accurate); kept only for setups saved before the change.",
+          "daily_cap_minutes": "Combined STT + TTS minutes per household per local day. Resets at local midnight.",
+          "retain_audio": "When off, Waven deletes each clip as soon as Home Assistant has downloaded it (so an interrupted download loses that one response), and a clip nobody downloads is removed by the hourly cleanup \u2014 normally within minutes of that sweep, at worst a little over an hour later. When on, clips stay for 72 hours. Speech-to-text audio from Home Assistant is never stored; gallery voices are unaffected."
+        }
+      }
+    }
+  },
+  "selector": {
+    "stt_mode": {
+      "options": {
+        "auto": "Auto (recommended)",
+        "fast": "Fast (legacy — now Parakeet, English)",
+        "multilingual": "Multilingual — Voxtral",
+        "accurate": "Accurate — Parakeet (English)"
+      }
+    }
+  }
+}
